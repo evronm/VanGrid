@@ -11,22 +11,20 @@ function VanTable (cols, data, conf) {
   this.cols=cols;
   this.data=data;
   this.conf=conf;
+  if (this.conf.selector){ this.selector=this.conf.select == "one" ? "radio" : "checkbox"}
 }
 
 VanTable.prototype.dom=function() {
-  if (this.conf.select) {
-    this.cols.unshift("");
-    field_type=this.conf.select=="one" ? "radio" : "checkbox"
-    this.rows.foreach ((row) => {
-      row.unshift(input({type: field_type, name: this.conf.field_name, value:row.shift()}))
-    })
-  }
   return table({class: this.conf.class, id: this.conf.id}, 
     thead(
-      this.cols.map((col) => th(col))
+      ((this.conf.select ? [""] : []).concat(this.cols)).map((col) => th(col))
     ),
-
-    tbody()
+    tbody(
+      this.conf.select ? 
+        "" 
+      : 
+        this.data.map((row) => tr({id: row.shift()}, row.map((cell) => td(cell))))
+    )
   );
 
 }
