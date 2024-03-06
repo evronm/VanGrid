@@ -11,7 +11,7 @@ function VanTable (cols, data, conf) {
   this.cols=cols;
   this.data=data;
   this.conf=conf;
-  if (this.conf.selector){ this.selector=this.conf.select == "one" ? "radio" : "checkbox"}
+  if (this.conf.select){ this.selector=this.conf.select == "one" ? "radio" : "checkbox"}
 }
 
 VanTable.prototype.dom=function() {
@@ -21,7 +21,7 @@ VanTable.prototype.dom=function() {
     ),
     tbody(
       this.conf.select ? 
-        "" 
+        this.data.map((row) => tr(td(input({type: this.selector, name: this.conf.field_name, value: row.shift()})), row.map((cell) => td(cell))))
       : 
         this.data.map((row) => tr({id: row.shift()}, row.map((cell) => td(cell))))
     )
